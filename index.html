@@ -3,73 +3,70 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Aircraft Maintenance - Collaborative WO System</title>
+    <title>Aviation WO - Man-Hour Recording</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <div id="app">
+        <!-- Header Info Section -->
+        <header class="header">
+            <div class="header-content">
+                <div class="wo-identity">
+                    <h1 id="wo-no">Loading...</h1>
+                    <span id="ac-reg" class="badge">--</span>
+                </div>
+                <div class="wo-details-grid">
+                    <div class="detail-item"><label>Customer:</label> <span id="customer">--</span></div>
+                    <div class="detail-item"><label>Description:</label> <span id="part-desc">--</span></div>
+                    <div class="detail-item"><label>P/N:</label> <span id="part-no">--</span></div>
+                    <div class="detail-item"><label>S/N:</label> <span id="serial-no">--</span></div>
+                </div>
+            </div>
+        </header>
 
-    <!-- STICKY HEADER -->
-    <header class="app-header">
-        <div class="header-content">
-            <div class="brand">
-                <span class="logo">✈️</span>
-                <h1>Maintenance Hub</h1>
-            </div>
-            <div class="status-badge" id="global-sync-status">● System Online</div>
-        </div>
-    </header>
-
-    <main class="container">
-        <!-- WO HEADER SECTION (VIEW ONLY) -->
-        <section class="wo-header-card">
-            <div class="wo-title-row">
-                <h2>Work Order: <span id="display-wo-no">--</span></h2>
-                <span class="badge badge-primary">Active</span>
-            </div>
-            <div class="wo-grid">
-                <div class="info-group">
-                    <label>Customer</label>
-                    <p id="display-customer">--</p>
-                </div>
-                <div class="info-group">
-                    <label>Registration</label>
-                    <p id="display-reg">--</p>
-                </div>
-                <div class="info-group">
-                    <label>Part Description</label>
-                    <p id="display-part-desc">--</p>
-                </div>
-                <div class="info-group">
-                    <label>P/N</label>
-                    <p id="display-pn">--</p>
-                </div>
-                <div class="info-group">
-                    <label>S/N</label>
-                    <p id="display-sn">--</p>
-                </div>
-            </div>
-        </section>
-
-        <!-- FINDINGS LIST CONTAINER -->
-        <div id="findings-container">
-            <!-- Dynamic findings will be injected here -->
-        </div>
-    </main>
-
-    <!-- MODAL OVERLAY (DYNAMIC) -->
-    <div id="modal-overlay" class="modal-overlay hidden">
-        <div class="modal-content">
-            <div id="modal-body">
-                <!-- Dynamic content injected via JS -->
-            </div>
-            <div class="modal-footer" id="modal-footer">
-                <!-- Buttons injected via JS -->
-            </div>
-        </div>
+        <main id="findings-container">
+            <div class="loader">Fetching Work Order Data...</div>
+        </main>
     </div>
 
-    <!-- REUSABLE HIDDEN FILE INPUT -->
-    <input type="file" id="hidden-photo-input" accept="image/*" style="display: none;">
+    <!-- Modals -->
+    <div id="modal-overlay" class="modal-overlay hidden">
+        <!-- Conflict Modal -->
+        <div id="conflict-modal" class="modal hidden">
+            <h3>Active Session Conflict</h3>
+            <p id="conflict-msg"></p>
+            <div class="modal-actions">
+                <button id="btn-parallel-yes" class="btn btn-primary">YES (Start Parallel)</button>
+                <button id="btn-parallel-no" class="btn btn-secondary">NO (Cancel)</button>
+            </div>
+        </div>
+
+        <!-- Stop Action Modal -->
+        <div id="stop-modal" class="modal hidden">
+            <h3>Stop Man-hour</h3>
+            <div id="user-selection" class="hidden">
+                <p>Select your Employee ID to stop:</p>
+                <div id="active-user-list"></div>
+            </div>
+            <div id="status-selection" class="hidden">
+                <p>Set Finding Final Status:</p>
+                <button onclick="finalizeSession('ON HOLD')" class="btn btn-yellow">ON HOLD</button>
+                <button onclick="finalizeSession('CLOSED')" class="btn btn-primary">CLOSED</button>
+            </div>
+            <div id="photo-upload" class="hidden">
+                <p>Upload Evidence (Required for Closure):</p>
+                <input type="file" id="evidence-file" accept="image/*" capture="camera">
+                <button id="btn-submit-close" class="btn btn-primary">Submit & Close</button>
+            </div>
+            <button onclick="closeModals()" class="btn btn-text">Cancel</button>
+        </div>
+
+        <!-- Image Modal -->
+        <div id="image-modal" class="modal modal-lg hidden">
+            <img id="full-size-img" src="" alt="Finding Image">
+            <button onclick="closeModals()" class="btn btn-secondary">Close</button>
+        </div>
+    </div>
 
     <script src="script.js"></script>
 </body>
