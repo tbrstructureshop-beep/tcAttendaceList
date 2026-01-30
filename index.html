@@ -3,69 +3,85 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Aviation WO - Man-Hour Recording</title>
+    <title>Aircraft Maintenance Work Order</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div id="app">
-        <!-- Header Info Section -->
-        <header class="header">
-            <div class="header-content">
-                <div class="wo-identity">
-                    <h1 id="wo-no">Loading...</h1>
-                    <span id="ac-reg" class="badge">--</span>
-                </div>
-                <div class="wo-details-grid">
-                    <div class="detail-item"><label>Customer:</label> <span id="customer">--</span></div>
-                    <div class="detail-item"><label>Description:</label> <span id="part-desc">--</span></div>
-                    <div class="detail-item"><label>P/N:</label> <span id="part-no">--</span></div>
-                    <div class="detail-item"><label>S/N:</label> <span id="serial-no">--</span></div>
-                </div>
+    <header class="app-header">
+        <div class="header-content">
+            <h1 id="wo-title">Loading WO...</h1>
+            <div id="connection-status" class="status-badge">Connecting...</div>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- HEADER INFO SECTION -->
+        <section class="card header-info">
+            <div class="info-grid">
+                <div class="info-item"><strong>Customer:</strong> <span id="info-customer">-</span></div>
+                <div class="info-item"><strong>A/C Reg:</strong> <span id="info-reg">-</span></div>
+                <div class="info-item"><strong>W/O No:</strong> <span id="info-wo-no">-</span></div>
+                <div class="info-item"><strong>Description:</strong> <span id="info-part-desc">-</span></div>
+                <div class="info-item"><strong>Part No:</strong> <span id="info-part-no">-</span></div>
+                <div class="info-item"><strong>Serial No:</strong> <span id="info-serial">-</span></div>
             </div>
-        </header>
+        </section>
 
-        <main id="findings-container">
-            <div class="loader">Fetching Work Order Data...</div>
-        </main>
-    </div>
+        <!-- FINDINGS LIST -->
+        <div id="findings-container">
+            <!-- Dynamic Injection -->
+        </div>
+    </main>
 
-    <!-- Modals -->
+    <!-- MODALS -->
     <div id="modal-overlay" class="modal-overlay hidden">
+        <!-- Image Preview Modal -->
+        <div id="modal-image" class="modal hidden">
+            <button class="close-btn">&times;</button>
+            <img id="full-image" src="" alt="Finding Image">
+        </div>
+
         <!-- Conflict Modal -->
-        <div id="conflict-modal" class="modal hidden">
-            <h3>Active Session Conflict</h3>
+        <div id="modal-conflict" class="modal hidden">
+            <h3>Parallel Session</h3>
             <p id="conflict-msg"></p>
             <div class="modal-actions">
-                <button id="btn-parallel-yes" class="btn btn-primary">YES (Start Parallel)</button>
-                <button id="btn-parallel-no" class="btn btn-secondary">NO (Cancel)</button>
+                <button id="btn-confirm-parallel" class="btn btn-primary">YES</button>
+                <button id="btn-cancel-parallel" class="btn btn-secondary">NO</button>
             </div>
         </div>
 
-        <!-- Stop Action Modal -->
-        <div id="stop-modal" class="modal hidden">
-            <h3>Stop Man-hour</h3>
-            <div id="user-selection" class="hidden">
-                <p>Select your Employee ID to stop:</p>
-                <div id="active-user-list"></div>
-            </div>
-            <div id="status-selection" class="hidden">
-                <p>Set Finding Final Status:</p>
-                <button onclick="finalizeSession('ON HOLD')" class="btn btn-yellow">ON HOLD</button>
-                <button onclick="finalizeSession('CLOSED')" class="btn btn-primary">CLOSED</button>
-            </div>
-            <div id="photo-upload" class="hidden">
-                <p>Upload Evidence (Required for Closure):</p>
-                <input type="file" id="evidence-file" accept="image/*" capture="camera">
-                <button id="btn-submit-close" class="btn btn-primary">Submit & Close</button>
-            </div>
-            <button onclick="closeModals()" class="btn btn-text">Cancel</button>
+        <!-- Stop User Selection Modal -->
+        <div id="modal-select-user" class="modal hidden">
+            <h3>Select Your ID to Stop</h3>
+            <div id="active-users-list" class="user-selection-list"></div>
+            <button class="btn btn-secondary close-modal-btn">Cancel</button>
         </div>
 
-        <!-- Image Modal -->
-        <div id="image-modal" class="modal modal-lg hidden">
-            <img id="full-size-img" src="" alt="Finding Image">
-            <button onclick="closeModals()" class="btn btn-secondary">Close</button>
+        <!-- Final Status & Evidence Modal -->
+        <div id="modal-final" class="modal hidden">
+            <h3>Update Final Status</h3>
+            <div class="input-group">
+                <label>Finding Status</label>
+                <select id="final-status-select">
+                    <option value="ON HOLD">ON HOLD</option>
+                    <option value="CLOSED">CLOSED</option>
+                </select>
+            </div>
+            <div id="evidence-upload-section" class="input-group hidden">
+                <label>Evidence Photo (Required for Closed)</label>
+                <input type="file" id="evidence-file" accept="image/*" capture="environment">
+                <div id="file-preview"></div>
+            </div>
+            <div class="modal-actions">
+                <button id="btn-submit-final" class="btn btn-primary">SUBMIT</button>
+            </div>
         </div>
+    </div>
+
+    <!-- LOADER -->
+    <div id="global-loader" class="loader-overlay hidden">
+        <div class="spinner"></div>
     </div>
 
     <script src="script.js"></script>
