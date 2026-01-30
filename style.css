@@ -1,0 +1,65 @@
+/* --- EXECUTION PAGE SPECIFIC --- */
+
+/* Read-Only Header */
+.wo-static-banner {
+    background: #fff; padding: 15px; border-bottom: 2px solid var(--primary);
+    margin-bottom: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+.wo-info-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 15px;
+}
+.info-item label { display: block; font-size: 0.7rem; color: #888; text-transform: uppercase; font-weight: bold;}
+.info-item span { display: block; font-size: 0.95rem; font-weight: 600; color: #333; }
+
+/* Clean Finding Card */
+.clean-finding {
+    background: #fff; border: 1px solid #e0e0e0; border-radius: 8px;
+    margin-bottom: 15px; overflow: hidden;
+}
+
+/* 1. Header Line */
+.cf-header {
+    padding: 12px 15px; background: #fdfdfd; border-bottom: 1px solid #f0f0f0;
+    display: flex; justify-content: space-between; align-items: center;
+}
+.cf-title { font-size: 1rem; font-weight: bold; color: var(--primary); }
+
+/* 2. Description (Always Visible) */
+.cf-desc-box {
+    padding: 15px; background: #fff; color: #444; font-size: 0.95rem;
+    border-bottom: 1px solid #eee; line-height: 1.5;
+}
+
+/* 3. Dropdowns (Accordions) */
+.accordion-btn {
+    width: 100%; text-align: left; padding: 12px 15px;
+    background: #f8f9fa; border: none; border-bottom: 1px solid #eee;
+    font-size: 0.85rem; font-weight: 700; color: #555;
+    cursor: pointer; display: flex; justify-content: space-between;
+    transition: background 0.2s;
+}
+.accordion-btn:hover { background: #eef2f5; }
+.accordion-btn i { transition: transform 0.3s; }
+.accordion-btn.active i { transform: rotate(180deg); }
+
+/* Content Areas */
+.accordion-content {
+    display: none; padding: 15px; background: #fff; border-bottom: 1px solid #eee;
+    animation: fadeIn 0.3s;
+}
+.accordion-content.show { display: block; }
+
+/* Info Table (Dropdown 1) */
+.info-table { width: 100%; font-size: 0.85rem; border-collapse: collapse; }
+.info-table th { background: #f0f0f0; text-align: left; padding: 6px; color: #666; }
+.info-table td { border-bottom: 1px solid #eee; padding: 8px 6px; }
+.avail-badge { 
+    padding: 2px 6px; border-radius: 4px; font-size: 0.7rem; color: white; background: #28a745; 
+}
+.avail-no { background: #dc3545; }
+
+/* Manhour Record (Dropdown 2) */
+.mh-record-box { background: #fafafa; border: 1px solid #eee; padding: 10px; border-radius: 6px; }
+
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
