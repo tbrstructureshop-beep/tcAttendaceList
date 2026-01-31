@@ -46,7 +46,6 @@
         </section>
     </main>
 
-    <!-- Modal: Image Preview -->
     <div id="image-modal" class="modal">
         <div class="modal-content full-image-content">
             <span class="close-modal">&times;</span>
@@ -54,7 +53,6 @@
         </div>
     </div>
 
-    <!-- Modal: Start Conflict -->
     <div id="conflict-modal" class="modal">
         <div class="modal-content">
             <h3>Active Session Conflict</h3>
@@ -68,7 +66,6 @@
         </div>
     </div>
 
-    <!-- Modal: Stop Selection -->
     <div id="stop-modal" class="modal">
         <div class="modal-content">
             <h3>Stop Man-hour</h3>
@@ -80,12 +77,10 @@
         </div>
     </div>
 
-    <!-- Modal: Finalization -->
     <div id="final-modal" class="modal">
         <div class="modal-content">
             <h3>Finalize Finding</h3>
             <p>All active sessions have ended. Select final status:</p>
-            
             <div class="form-group">
                 <label>Finding Status</label>
                 <select id="final-status-select">
@@ -93,13 +88,10 @@
                     <option value="CLOSED">CLOSED (Complete)</option>
                 </select>
             </div>
-
             <div id="evidence-upload-section" class="form-group hidden">
                 <label>Evidence Image (Required for CLOSED)</label>
                 <input type="file" id="evidence-file" accept="image/*" capture="environment">
-                <div id="evidence-preview-container"></div>
             </div>
-
             <div class="modal-actions">
                 <button id="submit-finalize" class="btn btn-success">Submit</button>
                 <button class="btn btn-secondary close-modal-btn">Cancel</button>
