@@ -1,110 +1,108 @@
-<!-- index.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Collaborative WO System</title>
+    <title>Aviation Maintenance Work Order</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
-    <!-- Global Loading Overlay -->
-    <div id="global-loader" class="loader-overlay">
+    <div id="loader" class="loader-overlay">
         <div class="spinner"></div>
-        <p class="loader-text">Syncing Live Data...</p>
     </div>
 
-    <!-- Header Section -->
-    <header class="wo-header">
-        <div class="header-grid">
-            <div class="header-item">
-                <label>Customer</label>
-                <span id="info-customer">Loading...</span>
-            </div>
-            <div class="header-item">
-                <label>A/C Reg</label>
-                <span id="info-acreg">...</span>
-            </div>
-            <div class="header-item">
-                <label>W/O No</label>
-                <span id="info-wono">...</span>
-            </div>
-            <div class="header-item">
-                <label>Part Desc</label>
-                <span id="info-partdesc">...</span>
-            </div>
-            <div class="header-item">
-                <label>Part No</label>
-                <span id="info-partno">...</span>
-            </div>
-            <div class="header-item">
-                <label>Serial No</label>
-                <span id="info-serialno">...</span>
+    <header class="app-header">
+        <div class="container">
+            <div class="header-content">
+                <h1 id="wo-title">Loading WO...</h1>
+                <div class="badge-row">
+                    <span id="header-reg" class="badge">--</span>
+                    <span id="header-customer" class="badge secondary">--</span>
+                </div>
             </div>
         </div>
     </header>
 
-    <!-- Findings Container -->
-    <main id="findings-container">
-        <!-- Injected via JS -->
+    <main class="container">
+        <section id="wo-info" class="wo-info-panel">
+            <div class="info-grid">
+                <div class="info-item">
+                    <label>Part Description</label>
+                    <p id="info-desc">--</p>
+                </div>
+                <div class="info-item">
+                    <label>P/N</label>
+                    <p id="info-pn">--</p>
+                </div>
+                <div class="info-item">
+                    <label>S/N</label>
+                    <p id="info-sn">--</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="findings-container" class="findings-list">
+            <!-- Cards injected by JS -->
+        </section>
     </main>
 
-    <!-- MODALS -->
-    
-    <!-- Image Preview Modal -->
-    <div id="modal-image" class="modal">
-        <div class="modal-content image-modal-content">
-            <span class="close-modal" onclick="UI.closeModal('modal-image')">&times;</span>
-            <img id="modal-img-target" src="" alt="Full Preview">
+    <!-- Modal: Image Preview -->
+    <div id="image-modal" class="modal">
+        <div class="modal-content full-image-content">
+            <span class="close-modal">&times;</span>
+            <img id="modal-img-large" src="" alt="Finding Image">
         </div>
     </div>
 
-    <!-- Conflict Modal (Parallel Work) -->
-    <div id="modal-conflict" class="modal">
+    <!-- Modal: Start Conflict -->
+    <div id="conflict-modal" class="modal">
         <div class="modal-content">
-            <h3>⚠️ Active Work Detected</h3>
-            <p>The following mechanics are already working here:</p>
-            <ul id="conflict-users-list"></ul>
-            <p><strong>Do you want to join this job?</strong></p>
+            <h3>Active Session Conflict</h3>
+            <p>The following personnel are already working on this finding:</p>
+            <ul id="active-mechanics-list"></ul>
+            <p>Do you wish to join this task?</p>
             <div class="modal-actions">
-                <button class="btn-cancel" onclick="UI.closeModal('modal-conflict')">NO</button>
-                <button class="btn-confirm" id="btn-conflict-confirm">YES, Start Parallel</button>
+                <button id="confirm-join" class="btn btn-primary">Join Task</button>
+                <button class="btn btn-secondary close-modal-btn">Cancel</button>
             </div>
         </div>
     </div>
 
-    <!-- Stop Select User Modal -->
-    <div id="modal-select-user" class="modal">
+    <!-- Modal: Stop Selection -->
+    <div id="stop-modal" class="modal">
         <div class="modal-content">
-            <h3>Identify Yourself</h3>
-            <p>Select your session to stop:</p>
-            <div id="stop-user-list" class="user-selection-grid"></div>
-            <button class="btn-cancel full-width" onclick="UI.closeModal('modal-select-user')">Cancel</button>
-        </div>
-    </div>
-
-    <!-- Final Status Modal -->
-    <div id="modal-final-status" class="modal">
-        <div class="modal-content">
-            <h3>Job Finalization</h3>
-            <p>You are the last active mechanic.</p>
-            <p>Set final status:</p>
-            <div class="modal-actions vertical">
-                <button class="btn-hold" onclick="WorkFlow.finalize('ON_HOLD')">⏸ ON HOLD (Shift Change)</button>
-                <button class="btn-close-job" onclick="WorkFlow.finalize('CLOSED')">✅ CLOSED (Job Done)</button>
+            <h3>Stop Man-hour</h3>
+            <p>Select your Employee ID to stop:</p>
+            <div id="stop-user-options" class="button-stack"></div>
+            <div class="modal-actions">
+                <button class="btn btn-secondary close-modal-btn">Cancel</button>
             </div>
         </div>
     </div>
 
-    <!-- Evidence Upload Modal -->
-    <div id="modal-evidence" class="modal">
+    <!-- Modal: Finalization -->
+    <div id="final-modal" class="modal">
         <div class="modal-content">
-            <h3>Upload Evidence</h3>
-            <p>Upload a photo of the completed work.</p>
-            <input type="file" id="evidence-file" accept="image/*">
+            <h3>Finalize Finding</h3>
+            <p>All active sessions have ended. Select final status:</p>
+            
+            <div class="form-group">
+                <label>Finding Status</label>
+                <select id="final-status-select">
+                    <option value="OPEN">ON HOLD (Re-Open)</option>
+                    <option value="CLOSED">CLOSED (Complete)</option>
+                </select>
+            </div>
+
+            <div id="evidence-upload-section" class="form-group hidden">
+                <label>Evidence Image (Required for CLOSED)</label>
+                <input type="file" id="evidence-file" accept="image/*" capture="environment">
+                <div id="evidence-preview-container"></div>
+            </div>
+
             <div class="modal-actions">
-                <button class="btn-confirm" onclick="WorkFlow.submitEvidence()">Submit & Close</button>
+                <button id="submit-finalize" class="btn btn-success">Submit</button>
+                <button class="btn btn-secondary close-modal-btn">Cancel</button>
             </div>
         </div>
     </div>
