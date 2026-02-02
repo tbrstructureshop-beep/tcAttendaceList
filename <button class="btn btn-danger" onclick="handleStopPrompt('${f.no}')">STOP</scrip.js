@@ -333,12 +333,24 @@ function startTimerEngine() {
             const container = document.getElementById(`timers-${f.no}`);
             if (!container) return;
             const actives = getActiveSessions(f.no);
+            
             container.innerHTML = actives.map(a => {
                 const diff = Math.floor((new Date() - new Date(a.timestamp)) / 1000);
                 const h = Math.floor(diff / 3600).toString().padStart(2,'0');
                 const m = Math.floor((diff % 3600) / 60).toString().padStart(2,'0');
                 const s = (diff % 60).toString().padStart(2,'0');
-                return `<div class="timer-row"><span>${a.employeeId}</span><span class="timer-val">${h}:${m}:${s}</span></div>`;
+                
+                // ADDED: A wrapper for the right side and the small stop button
+                return `
+                    <div class="timer-row">
+                        <span class="timer-emp">ID: ${a.employeeId}</span>
+                        <div class="timer-controls-right">
+                            <span class="timer-val">${h}:${m}:${s}</span>
+                            <button class="btn-stop-mini" onclick="processStop('${f.no}', '${a.employeeId}')">
+                                STOP
+                            </button>
+                        </div>
+                    </div>`;
             }).join('');
         });
     }, 1000);
