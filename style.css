@@ -33,9 +33,9 @@ body {
 }
 
 .badge.secondary { background: var(--warning); color: var(--text-dark); }
-.badge.status-open { background: #6c757d; color: white; }
-.badge.status-in-progress { background: var(--primary); color: white; }
-.badge.status-closed { background: var(--success); color: white; }
+.badge.status-open { background: #6c757d; color: white; }      /* Gray */
+.badge.status-progress { background: #1e7572; color: white; }  /* Teal/Primary */
+.badge.status-closed { background: #28a745; color: white; }    /* Green */
 
 .wo-info-panel {
     background: var(--gray-light); border-radius: 8px; padding: 15px; margin-bottom: 20px; border: 1px solid var(--gray-border);
