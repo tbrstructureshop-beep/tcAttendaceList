@@ -27,12 +27,21 @@ window.addEventListener('DOMContentLoaded', () => {
 });
 
 function setupGlobalEvents() {
+    // Close modals
     document.querySelectorAll('.close-modal, .close-modal-btn').forEach(btn => {
         btn.onclick = () => document.querySelectorAll('.modal').forEach(m => m.style.display = 'none');
     });
-    document.getElementById('final-status-select').onchange = (e) => {
-        const uploadBox = document.getElementById('evidence-upload-section');
-        e.target.value === 'CLOSED' ? uploadBox.classList.remove('hidden') : uploadBox.classList.add('hidden');
+
+    // Handle Evidence Visibility
+    const statusSelect = document.getElementById('final-status-select');
+    const uploadBox = document.getElementById('evidence-upload-section');
+
+    statusSelect.onchange = (e) => {
+        if (e.target.value === 'CLOSED') {
+            uploadBox.classList.remove('hidden');
+        } else {
+            uploadBox.classList.add('hidden');
+        }
     };
 }
 
