@@ -67,7 +67,47 @@ body {
 
 .description-box { white-space: pre-wrap; font-size: 0.9rem; background: #f9f9f9; padding: 10px; border-radius: 4px; margin-bottom: 10px; }
 
-.finding-thumb { width: 100%; height: 180px; object-fit: cover; border-radius: 4px; cursor: pointer; margin-bottom: 10px; }
+/* --- NEW IMAGE COMPARISON STYLES --- */
+.image-comparison {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Two columns for two images */
+    gap: 10px;
+    margin: 10px 0;
+}
+
+/* If there is only one image (Finding still OPEN), make it full width */
+.image-comparison:not(:has(.img-box:nth-child(2))) {
+    grid-template-columns: 1fr;
+}
+
+.img-box {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+}
+
+.img-box small {
+    display: block;
+    font-weight: bold;
+    font-size: 0.65rem;
+    color: var(--primary-dark);
+    margin-bottom: 4px;
+    background: var(--gray-light);
+    padding: 3px;
+    border-radius: 3px;
+    border: 1px solid var(--gray-border);
+    text-transform: uppercase;
+}
+
+.finding-thumb { 
+    width: 100%; 
+    height: 140px; /* Reduced height so side-by-side looks better */
+    object-fit: cover; 
+    border-radius: 4px; 
+    cursor: pointer; 
+    border: 1px solid var(--gray-border);
+}
+/* --- END IMAGE STYLES --- */
 
 /* 1. MATERIAL TABLE (Keep it simple) */
 /* 1. MATERIAL TABLE (Optimized for 4 Columns) */
