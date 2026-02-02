@@ -123,12 +123,59 @@ function renderMaterialRows(fNo) {
 
 function renderLogRows(fNo) {
     const filtered = APP_STATE.logs.filter(l => l.findingNo == fNo).reverse();
+    
+    if (filtered.length === 0) return '<tr><td colspan="5">No logs yet</td></tr>';
+
     return filtered.map(l => {
         const d = new Date(l.timestamp);
-        return `<tr><td>${d.getHours()}:${d.getMinutes()}</td><td><b>${l.employeeId}</b></td><td>${l.action}</td></tr>`;
+        
+        // Format Date: DD MMM YYYY (e.g., 24 May 2024)
+        const dateStr = d.toLocaleDateString('en-GB', { 
+            day: '2-digit', month: 'short', year: 'numeric' 
+        });
+
+        // Format Time: HH:mm (24h)
+        const timeStr = d.toLocaleTimeString('en-GB', { 
+            hour: '2-digit', minute: '2-digit', hour12: false 
+        });
+
+        // Format Duration (only show for STOP actions)
+        const durationDisplay = (l.action === 'STOP' && l.duration) 
+            ? formatDuration(l.duration) 
+            : "-";
+
+        // Status styling
+        const statusText = l.status || "";
+        
+        return `
+            <tr>
+                <td style="font-size: 0.85em;">
+                    ${dateStr}<br>
+                    <small style="color: #666;">${timeStr}</small>
+                </td>
+                <td><b>${l.employeeId}</b></td>
+                <td>
+                    <span class="badge ${l.action === 'START' ? 'status-in-progress' : 'status-closed'}">
+                        ${l.action}
+                    </span>
+                </td>
+                <td style="font-family: monospace;">${durationDisplay}</td>
+                <td><small>${statusText}</small></td>
+            </tr>`;
     }).join('');
 }
 
+// Helper function to turn seconds into "1h 20m" or "45s"
+function formatDuration(seconds) {
+    if (!seconds || seconds < 0) return "-";
+    const h = Math.floor(seconds / 3600);
+    const m = Math.floor((seconds % 3600) / 60);
+    const s = seconds % 60;
+
+    if (h > 0) return `${h}h ${m}m`;
+    if (m > 0) return `${m}m ${s}s`;
+    return `${s}s`;
+}
 function toggleCard(fNo) { document.getElementById(`body-${fNo}`).classList.toggle('hidden'); }
 
 function formatDriveUrl(url) {
