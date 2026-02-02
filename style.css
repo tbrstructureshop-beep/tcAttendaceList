@@ -74,6 +74,57 @@ body {
 .material-table td, .log-table td { padding: 8px; border-bottom: 1px solid #eee; }
 .material-table tr:nth-child(even) { background: #fdfdfd; }
 
+/* --- UPDATED LOG TABLE STYLING --- */
+
+/* Make the log table font slightly smaller to fit more data */
+.log-table {
+    font-size: 0.75rem; 
+    table-layout: fixed; /* Helps keep columns aligned */
+}
+
+/* Specific column widths for better mobile viewing */
+.log-table td:nth-child(1) { width: 25%; } /* Date/Time */
+.log-table td:nth-child(2) { width: 20%; } /* Emp ID */
+.log-table td:nth-child(3) { width: 20%; } /* Action */
+.log-table td:nth-child(4) { width: 20%; } /* Duration */
+.log-table td:nth-child(5) { width: 15%; } /* Status */
+
+.log-table td {
+    padding: 6px 4px;
+    vertical-align: middle;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+/* Style the small HH:MM text */
+.log-table small {
+    display: block;
+    color: var(--text-muted);
+    font-size: 0.65rem;
+    margin-top: 2px;
+}
+
+/* Style the Duration column to look technical */
+.log-table td:nth-child(4) {
+    font-family: 'Courier New', monospace;
+    font-weight: bold;
+    color: var(--primary-dark);
+}
+
+/* Ensure Action badges are small and centered */
+.log-table .badge {
+    display: inline-block;
+    width: 100%;
+    text-align: center;
+    padding: 2px 0;
+}
+
+/* Make sure the status text at the end is subtle */
+.log-table td:last-child {
+    font-style: italic;
+    color: var(--text-muted);
+    font-size: 0.7rem;
+}
+
 .controls-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
 .form-group label { display: block; font-size: 0.75rem; margin-bottom: 4px; font-weight: bold; }
 
