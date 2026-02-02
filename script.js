@@ -124,34 +124,36 @@ function renderMaterialRows(fNo) {
 function renderLogRows(fNo) {
     const filtered = APP_STATE.logs.filter(l => l.findingNo == fNo).reverse();
     
-    if (filtered.length === 0) return '<tr><td colspan="5">No logs yet</td></tr>';
+    if (filtered.length === 0) return '<tr><td colspan="5" style="text-align:center;">No logs yet</td></tr>';
 
     return filtered.map(l => {
+        // Create the date object from the timestamp
         const d = new Date(l.timestamp);
         
-        // Format Date: DD MMM YYYY (e.g., 24 May 2024)
+        // 1. Format Date: 24 May 2024
         const dateStr = d.toLocaleDateString('en-GB', { 
             day: '2-digit', month: 'short', year: 'numeric' 
         });
 
-        // Format Time: HH:mm (24h)
+        // 2. Format Time: 14:30
         const timeStr = d.toLocaleTimeString('en-GB', { 
             hour: '2-digit', minute: '2-digit', hour12: false 
         });
 
-        // Format Duration (only show for STOP actions)
-        const durationDisplay = (l.action === 'STOP' && l.duration) 
-            ? formatDuration(l.duration) 
-            : "-";
+        // 3. Format Duration (Only show if action is STOP and duration exists)
+        let durationDisplay = "-";
+        if (l.action === 'STOP' && l.duration) {
+            durationDisplay = formatDuration(l.duration);
+        }
 
-        // Status styling
         const statusText = l.status || "";
-        
+
+        // YOUR CODE HERE:
         return `
             <tr>
-                <td style="font-size: 0.85em;">
+                <td style="font-size: 0.85em; line-height: 1.2;">
                     ${dateStr}<br>
-                    <small style="color: #666;">${timeStr}</small>
+                    <small style="color: #666; font-size: 0.75em;">${timeStr}</small>
                 </td>
                 <td><b>${l.employeeId}</b></td>
                 <td>
@@ -159,7 +161,9 @@ function renderLogRows(fNo) {
                         ${l.action}
                     </span>
                 </td>
-                <td style="font-family: monospace;">${durationDisplay}</td>
+                <td style="font-family: monospace; font-weight: bold; color: var(--primary-dark);">
+                    ${durationDisplay}
+                </td>
                 <td><small>${statusText}</small></td>
             </tr>`;
     }).join('');
