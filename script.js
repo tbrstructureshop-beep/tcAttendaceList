@@ -86,6 +86,28 @@ function renderFindings() {
         const card = document.createElement('div');
         card.className = 'finding-card';
         const imageUrl = formatDriveUrl(f.imageUrl);
+        const evidenceImg = f.evidenceUrl ? formatDriveUrl(f.evidenceUrl) : null;
+        
+        // --- STEP 1: ADD THIS LOGIC BLOCK HERE ---
+        let imageHtml = `
+            <div class="image-comparison">
+                <div class="img-box">
+                    <small>ORIGINAL FINDING</small>
+                    <img src="${imageUrl}" class="finding-thumb" onclick="previewImage('${imageUrl}')">
+                </div>
+        `;
+
+        if (evidenceImg) {
+            imageHtml += `
+                <div class="img-box">
+                    <small>AFTER REPAIR</small>
+                    <img src="${evidenceImg}" class="finding-thumb" onclick="previewImage('${evidenceImg}')">
+                </div>
+            `;
+        }
+        imageHtml += `</div>`;
+        // -----------------------------------------
+
         card.innerHTML = `
             <div class="card-header" onclick="toggleCard('${f.no}')">
                 <div><h4>Finding #${f.no}</h4><span class="summary-text">${f.description}</span></div>
@@ -94,7 +116,16 @@ function renderFindings() {
             <div id="body-${f.no}" class="card-body hidden">
                 <div class="description-box"><strong>Finding:</strong> ${f.description}</div>
                 <div class="description-box"><strong>Action Given:</strong> ${f.actionGiven}</div>
-                <img src="${imageUrl}" class="finding-thumb" onclick="previewImage('${imageUrl}')">
+        
+        card.innerHTML = `
+            <div class="card-header" onclick="toggleCard('${f.no}')">
+                <div><h4>Finding #${f.no}</h4><span class="summary-text">${f.description}</span></div>
+                <span class="badge status-${(f.status || 'OPEN').toLowerCase().replace('_','-')}">${f.status || 'OPEN'}</span>
+            </div>
+            <div id="body-${f.no}" class="card-body hidden">
+                <div class="description-box"><strong>Finding:</strong> ${f.description}</div>
+                <div class="description-box"><strong>Action Given:</strong> ${f.actionGiven}</div>
+                ${imageHtml} 
                 <div class="section-title">Materials</div>
                 <table class="material-table"><tbody>${renderMaterialRows(f.no)}</tbody></table>
                 <div class="section-title">Man-Hour Action</div>
