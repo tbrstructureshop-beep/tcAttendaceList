@@ -343,16 +343,24 @@ function handleStopPrompt(fNo) {
 function processStop(fNo, empId) {
     const actives = getActiveSessions(fNo);
     
-    // If I am NOT the last person (others are still working)
     if (actives.length > 1) {
         if(confirm(`User ${empId}: Stop your timer? (Others are still working)`)) {
-            finalizeStop(fNo, empId, false); // Just stop this user
+            finalizeStop(fNo, empId, false);
         }
     } 
-    // If I am the LAST person working
     else {
+        // 1. Set the Finding ID in the modal text
+        document.getElementById('modal-finding-id').textContent = fNo;
+        
+        // 2. Reset the dropdown and hide upload section (cleanup)
+        document.getElementById('final-status-select').value = 'PROGRESS';
+        document.getElementById('evidence-upload-section').classList.add('hidden');
+        
+        // 3. Show the modal
         document.getElementById('final-modal').style.display = 'block';
-        // We will customize the UI of this modal in the next step
+
+        // 4. Assign the click event for the submit button
+        document.getElementById('submit-finalize').onclick = () => finalizeStop(fNo, empId, true);
     }
 }
 
