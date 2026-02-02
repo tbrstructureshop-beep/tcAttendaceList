@@ -16,9 +16,14 @@ let APP_STATE = {
 };
 
 window.addEventListener('DOMContentLoaded', () => {
-    fetchInitialData();
+    fetchInitialData();      // Initial load (shows loader)
     setupGlobalEvents();
     startTimerEngine();
+
+    // ADD THIS: Refresh data every 30 seconds without showing loader
+    setInterval(() => {
+        fetchInitialData(true); 
+    }, 30000); 
 });
 
 function setupGlobalEvents() {
@@ -31,26 +36,37 @@ function setupGlobalEvents() {
     };
 }
 
-async function fetchInitialData() {
-    showLoader(true);
+async function fetchInitialData(isBackground = false) {
+    // 1. Only show the loading spinner if the user clicked something.
+    // We don't want the spinner to pop up every 30 seconds during auto-sync.
+    if (!isBackground) showLoader(true); 
+
     try {
         const response = await fetch(`${API}?sheetId=${SHEET_ID}&action=getWOData`);
         const result = await response.json();
+
         if (result.success) {
             APP_STATE.info = result.data.info;
             APP_STATE.findings = result.data.findings;
             APP_STATE.materials = result.data.materials;
             APP_STATE.logs = result.data.logs;
             APP_STATE.woId = result.data.info.woNo;
+
+            // Re-draw the screen with the new data from other users
             renderHeader();
             renderFindings();
         } else {
-            alert("Error: " + result.error);
+            // Only show alert if user is manually loading. 
+            // If background fails, just log it to console.
+            if (!isBackground) alert("Error: " + result.error);
+            console.warn("Background sync failed:", result.error);
         }
     } catch (e) {
-        alert("System connection failure.");
+        if (!isBackground) alert("System connection failure.");
+        console.error("Network error during sync:", e);
     } finally {
-        showLoader(false);
+        // 2. Only hide the loader if we actually showed it
+        if (!isBackground) showLoader(false);
     }
 }
 
@@ -215,3 +231,12 @@ function startTimerEngine() {
 
 function showLoader(show) { document.getElementById('loader').style.display = show ? 'flex' : 'none'; }
 function toBase64(file) { return new Promise((resolve, reject) => { const reader = new FileReader(); reader.readAsDataURL(file); reader.onload = () => resolve(reader.result.split(',')[1]); reader.onerror = reject; }); }
+// Add this to your code
+const REFRESH_INTERVAL = 30000; // Refresh every 30 seconds (adjust as needed)
+
+function startAutoRefresh() {
+    setInterval(() => {
+        // Fetch data in the background without showing the heavy loader
+        fetchInitialData(true); 
+    }, REFRESH_INTERVAL);
+}
