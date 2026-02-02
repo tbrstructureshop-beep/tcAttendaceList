@@ -20,10 +20,10 @@ window.addEventListener('DOMContentLoaded', () => {
     setupGlobalEvents();
     startTimerEngine();
 
-    // ADD THIS: Refresh data every 30 seconds without showing loader
+    // ADD THIS: Refresh data every 50 seconds without showing loader
     setInterval(() => {
         fetchInitialData(true); 
-    }, 30000); 
+    }, 50000); 
 });
 
 function setupGlobalEvents() {
