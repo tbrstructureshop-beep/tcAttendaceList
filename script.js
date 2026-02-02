@@ -82,13 +82,20 @@ function renderHeader() {
 function renderFindings() {
     const container = document.getElementById('findings-container');
     container.innerHTML = '';
+    
+    if (!APP_STATE.findings || APP_STATE.findings.length === 0) {
+        container.innerHTML = '<p style="text-align:center; padding:20px;">No findings found.</p>';
+        return;
+    }
+
     APP_STATE.findings.forEach(f => {
         const card = document.createElement('div');
         card.className = 'finding-card';
+        
         const imageUrl = formatDriveUrl(f.imageUrl);
         const evidenceImg = f.evidenceUrl ? formatDriveUrl(f.evidenceUrl) : null;
         
-        // --- STEP 1: ADD THIS LOGIC BLOCK HERE ---
+        // Build the image block (Single or Comparison)
         let imageHtml = `
             <div class="image-comparison">
                 <div class="img-box">
@@ -106,8 +113,8 @@ function renderFindings() {
             `;
         }
         imageHtml += `</div>`;
-        // -----------------------------------------
 
+        // Create the card content
         card.innerHTML = `
             <div class="card-header" onclick="toggleCard('${f.no}')">
                 <div><h4>Finding #${f.no}</h4><span class="summary-text">${f.description}</span></div>
@@ -116,18 +123,12 @@ function renderFindings() {
             <div id="body-${f.no}" class="card-body hidden">
                 <div class="description-box"><strong>Finding:</strong> ${f.description}</div>
                 <div class="description-box"><strong>Action Given:</strong> ${f.actionGiven}</div>
-        
-        card.innerHTML = `
-            <div class="card-header" onclick="toggleCard('${f.no}')">
-                <div><h4>Finding #${f.no}</h4><span class="summary-text">${f.description}</span></div>
-                <span class="badge status-${(f.status || 'OPEN').toLowerCase().replace('_','-')}">${f.status || 'OPEN'}</span>
-            </div>
-            <div id="body-${f.no}" class="card-body hidden">
-                <div class="description-box"><strong>Finding:</strong> ${f.description}</div>
-                <div class="description-box"><strong>Action Given:</strong> ${f.actionGiven}</div>
+                
                 ${imageHtml} 
+
                 <div class="section-title">Materials</div>
                 <table class="material-table"><tbody>${renderMaterialRows(f.no)}</tbody></table>
+                
                 <div class="section-title">Man-Hour Action</div>
                 <div class="controls-row">
                     <input type="text" id="emp-${f.no}" placeholder="EMP ID">
@@ -137,7 +138,9 @@ function renderFindings() {
                     <button class="btn btn-primary" onclick="handleStart('${f.no}')">START</button>
                     <button class="btn btn-danger" onclick="handleStopPrompt('${f.no}')">STOP</button>
                 </div>
+                
                 <div class="active-timers-container" id="timers-${f.no}"></div>
+                
                 <div class="section-title">Log</div>
                 <table class="log-table"><tbody>${renderLogRows(f.no)}</tbody></table>
             </div>
