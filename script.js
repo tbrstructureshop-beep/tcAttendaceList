@@ -92,10 +92,12 @@ function renderFindings() {
         const card = document.createElement('div');
         card.className = 'finding-card';
         
+        // --- ADD THIS LINE HERE: Check if the job is closed ---
+        const isClosed = (f.status === 'CLOSED');
+        
         const imageUrl = formatDriveUrl(f.imageUrl);
         const evidenceImg = f.evidenceUrl ? formatDriveUrl(f.evidenceUrl) : null;
         
-        // Build the image block (Single or Comparison)
         let imageHtml = `
             <div class="image-comparison">
                 <div class="img-box">
@@ -114,7 +116,6 @@ function renderFindings() {
         }
         imageHtml += `</div>`;
 
-        // Create the card content
         card.innerHTML = `
             <div class="card-header" onclick="toggleCard('${f.no}')">
                 <div><h4>Finding #${f.no}</h4><span class="summary-text">${f.description}</span></div>
@@ -130,11 +131,18 @@ function renderFindings() {
                 <table class="material-table"><tbody>${renderMaterialRows(f.no)}</tbody></table>
                 
                 <div class="section-title">Man-Hour Action</div>
-                <div class="controls-row compact-row">
-                    <input type="text" id="emp-${f.no}" placeholder="EMP ID">
-                    <input type="text" id="task-${f.no}" placeholder="Task Code">
-                    <button class="btn btn-primary" onclick="handleStart('${f.no}')">START</button>
-                </div>
+                
+                <!-- --- LOGIC CHANGE STARTS HERE --- -->
+                ${isClosed ? 
+                    `<div class="closed-message">✅ Job Closed - No further actions required</div>` : 
+                    `<div class="controls-row compact-row">
+                        <input type="text" id="emp-${f.no}" placeholder="EMP ID">
+                        <input type="text" id="task-${f.no}" placeholder="Task Code">
+                        <button class="btn btn-primary" onclick="handleStart('${f.no}')">START</button>
+                    </div>`
+                }
+                <!-- --- LOGIC CHANGE ENDS HERE --- -->
+
                 <div class="active-timers-container" id="timers-${f.no}"></div>
                 
                 <div class="section-title">Log</div>
