@@ -1,138 +1,248 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Aviation Maintenance Work Order</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Daily Attendance</title>
+  <style>
+    :root {
+      --primary: #307c91;
+      --primary-dark: #245f6f;
+      --bg: #f4f8fa;
+      --card: #ffffff;
+      --text-main: #0f2f36;
+      --text-sub: #5f7f88;
+      --accent: #3fa2b8;
+      --radius: 14px;
+      --transition: all 0.25s ease;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text-main);
+      min-height: 100vh;
+      padding: 16px;
+    }
+
+    .app {
+      max-width: 900px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    header {
+      background: var(--card);
+      border-radius: var(--radius);
+      padding: 20px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.04);
+    }
+
+    .greeting {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    .employee-meta {
+      font-size: 0.9rem;
+      color: var(--text-sub);
+      margin-bottom: 10px;
+    }
+
+    .date {
+      font-size: 0.95rem;
+      color: var(--primary-dark);
+      font-weight: 500;
+    }
+
+    .summary {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 14px;
+    }
+
+    @media (min-width: 600px) {
+      .summary {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    .card {
+      background: var(--card);
+      border-radius: var(--radius);
+      padding: 18px;
+      text-align: center;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.04);
+      transition: var(--transition);
+    }
+
+    .card:hover {
+      transform: translateY(-2px);
+    }
+
+    .card-label {
+      font-size: 0.85rem;
+      color: var(--text-sub);
+      margin-bottom: 8px;
+      letter-spacing: 0.3px;
+    }
+
+    .card-value {
+      font-size: 1.4rem;
+      font-weight: 600;
+      color: var(--primary);
+    }
+
+    .actions {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    @media (min-width: 600px) {
+      .actions {
+        flex-direction: row;
+      }
+    }
+
+    button {
+      border: none;
+      border-radius: var(--radius);
+      padding: 16px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .btn-primary {
+      flex: 1;
+      background: var(--primary);
+      color: #fff;
+    }
+
+    .btn-primary:active {
+      background: var(--primary-dark);
+      transform: scale(0.98);
+    }
+
+    .btn-secondary {
+      background: #e6f1f4;
+      color: var(--primary-dark);
+    }
+
+    .btn-secondary:active {
+      background: #d4e7ec;
+      transform: scale(0.98);
+    }
+  </style>
 </head>
 <body>
-    <div id="loader" class="loader-overlay">
-        <div class="spinner"></div>
-    </div>
-
-    <header class="app-header">
-        <div class="container">
-            <div class="header-content">
-                <h1 id="wo-title">Loading WO...</h1>
-                <div class="badge-row">
-                    <span id="header-reg" class="badge">--</span>
-                    <span id="header-customer" class="badge secondary">--</span>
-                </div>
-            </div>
-        </div>
+  <div class="app">
+    <header>
+      <div class="greeting" id="greeting"></div>
+      <div class="employee-meta" id="employeeMeta"></div>
+      <div class="date" id="todayDate"></div>
     </header>
 
-    <main class="container">
-        <section id="wo-info" class="wo-info-panel">
-            <div class="info-grid">
-                <div class="info-item">
-                    <label>Part Description</label>
-                    <p id="info-desc">--</p>
-                </div>
-                <div class="info-item">
-                    <label>P/N</label>
-                    <p id="info-pn">--</p>
-                </div>
-                <div class="info-item">
-                    <label>S/N</label>
-                    <p id="info-sn">--</p>
-                </div>
-            </div>
-        </section>
+    <section class="summary">
+      <div class="card">
+        <div class="card-label">Clock In</div>
+        <div class="card-value" id="clockIn">--:--</div>
+      </div>
+      <div class="card">
+        <div class="card-label">Clock Out</div>
+        <div class="card-value" id="clockOut">--:--</div>
+      </div>
+      <div class="card">
+        <div class="card-label">Work Duration</div>
+        <div class="card-value" id="duration">--:--</div>
+      </div>
+    </section>
 
-        <section id="findings-container" class="findings-list">
-            <!-- Cards injected by JS -->
-        </section>
-    </main>
+    <section class="actions">
+      <button class="btn-primary" id="clockButton">Clock In</button>
+      <button class="btn-secondary">Menu</button>
+    </section>
+  </div>
 
-    <div id="image-modal" class="modal">
-        <div class="modal-content full-image-content">
-            <span class="close-modal">&times;</span>
-            <img id="modal-img-large" src="" alt="Finding Image">
-        </div>
-    </div>
+  <script>
+    const employeeName = "Alex Morgan";
+    const employeeId = "EMP-10245";
+    const department = "Aircraft Maintenance";
 
-    <div id="conflict-modal" class="modal">
-        <div class="modal-content">
-            <h3>Active Session Conflict</h3>
-            <p>The following personnel are already working on this finding:</p>
-            <ul id="active-mechanics-list"></ul>
-            <p>Do you wish to join this task?</p>
-            <div class="modal-actions">
-                <button id="confirm-join" class="btn btn-primary">Join Task</button>
-                <button class="btn btn-secondary close-modal-btn">Cancel</button>
-            </div>
-        </div>
-    </div>
+    let clockInTime = null;
+    let clockOutTime = null;
+    let isClockedIn = false;
 
-    <div id="stop-modal" class="modal">
-        <div class="modal-content">
-            <h3>Stop Man-hour</h3>
-            <p>Select your Employee ID to stop:</p>
-            <div id="stop-user-options" class="button-stack"></div>
-            <div class="modal-actions">
-                <button class="btn btn-secondary close-modal-btn">Cancel</button>
-            </div>
-        </div>
-    </div>
+    const greetingEl = document.getElementById("greeting");
+    const metaEl = document.getElementById("employeeMeta");
+    const dateEl = document.getElementById("todayDate");
+    const clockInEl = document.getElementById("clockIn");
+    const clockOutEl = document.getElementById("clockOut");
+    const durationEl = document.getElementById("duration");
+    const clockButton = document.getElementById("clockButton");
 
-<!-- TASK SEQUENCE MODAL (The "Lock") -->
-    <div id="sequencing-modal" class="modal">
-        <div class="modal-content">
-            <h3 style="color: var(--danger);">Task Sequence Blocked</h3>
-            <p>You attempted to start Task: <b id="attempted-task"></b></p>
-            <hr style="border: 0; border-top: 1px solid #eee; margin: 15px 0;">
-            <p>However, the following task is currently <b>IN PROGRESS</b> for this finding:</p>
-            
-            <div style="background: #fff3f3; padding: 15px; border-radius: 4px; text-align: center; border: 1px solid #facccc; margin: 10px 0;">
-                <span style="font-size: 1.5rem; font-weight: bold; color: var(--danger);" id="active-task-name"></span>
-            </div>
-            
-            <p style="font-size: 0.85rem; color: var(--text-muted);">
-                According to company policy, the active task must be stopped and finished before a new task sequence can begin.
-            </p>
-            <div class="modal-actions">
-                <button class="btn btn-secondary close-modal-btn">Understood</button>
-            </div>
-        </div>
-    </div>
+    function formatTime(date) {
+      return date.toLocaleTimeString("en-GB");
+    }
 
-    <!-- UPDATED FINAL MODAL (The "Key") -->
-    <div id="final-modal" class="modal">
-        <div class="modal-content">
-            <h3>Finish Finding Work</h3>
-            <p>You are the last person working. What is the status of this Finding?</p>
-            
-            <div class="form-group">
-                <label>Next Step for Finding</label>
-                <select id="final-status-select">
-                    <!-- This option releases the "Lock" for the next task code -->
-                    <option value="PROGRESS">Current Task Finished - Waiting for Next Task Code</option>
-                    
-                    <!-- This option finishes the whole Finding -->
-                    <option value="CLOSED">All Tasks Completed - Ready to CLOSE Finding</option>
-                    
-                    <!-- This option keeps the task open but pauses it -->
-                    <option value="OPEN">Work Paused - Finding still OPEN (On-Hold)</option>
-                </select>
-            </div>
+    function formatDuration(ms) {
+      const totalSeconds = Math.floor(ms / 1000);
+      const h = String(Math.floor(totalSeconds / 3600)).padStart(2, "0");
+      const m = String(Math.floor((totalSeconds % 3600) / 60)).padStart(2, "0");
+      const s = String(totalSeconds % 60).padStart(2, "0");
+      return `${h}:${m}:${s}`;
+    }
 
-            <div id="evidence-upload-section" class="form-group hidden">
-                <label>Evidence Image (Required for CLOSED)</label>
-                <input type="file" id="evidence-file" accept="image/*" capture="environment">
-                <p style="font-size: 0.7rem; color: var(--text-muted); margin-top: 5px;">
-                    Take a photo of the completed work or the signed NRC.
-                </p>
-            </div>
+    function updateDuration() {
+      if (clockInTime && clockOutTime) {
+        durationEl.textContent = formatDuration(clockOutTime - clockInTime);
+      } else {
+        durationEl.textContent = "--:--";
+      }
+    }
 
-            <div class="modal-actions">
-                <button id="submit-finalize" class="btn btn-success">Submit</button>
-                <button class="btn btn-secondary close-modal-btn">Cancel</button>
-            </div>
-        </div>
-    </div>
+    clockButton.addEventListener("click", () => {
+      const now = new Date();
+      if (!isClockedIn) {
+        clockInTime = now;
+        clockOutTime = null;
+        clockInEl.textContent = formatTime(now);
+        clockOutEl.textContent = "--:--";
+        isClockedIn = true;
+        clockButton.textContent = "Clock Out";
+      } else {
+        clockOutTime = now;
+        clockOutEl.textContent = formatTime(now);
+        isClockedIn = false;
+        clockButton.textContent = "Clock In";
+      }
+      updateDuration();
+    });
 
-    <script src="script.js"></script>
+    function init() {
+      greetingEl.textContent = `Good Morning, ${employeeName}`;
+      metaEl.textContent = `${employeeId} | ${department}`;
+      const today = new Date();
+      dateEl.textContent = today.toLocaleDateString("en-GB", {
+        weekday: "long",
+        day: "2-digit",
+        month: "short",
+        year: "numeric"
+      });
+    }
+
+    init();
+  </script>
 </body>
 </html>
